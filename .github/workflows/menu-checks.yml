@@ -1,0 +1,32 @@
+# The 3 automatic checks. GitHub runs them on every pull request, and again on main after each merge.
+name: Menu checks
+
+on:
+  pull_request:
+  push:
+    branches: [main]
+
+permissions:
+  contents: read
+
+jobs:
+  prices:
+    name: Prices look like $12.50
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+      - run: node .github/checks/menu-check.mjs prices
+
+  alt-text:
+    name: Every photo has alt text
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+      - run: node .github/checks/menu-check.mjs alt
+
+  photos:
+    name: Every photo file exists
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+      - run: node .github/checks/menu-check.mjs photos

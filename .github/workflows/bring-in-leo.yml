@@ -1,0 +1,27 @@
+# Run this once, from the Actions tab: it makes your teammate Leo's branch, leo-weekend-specials,
+# with his changes for this weekend's menu. (Leo is made up. This Action plays his part.)
+name: Bring in Leo's branch
+
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  leo:
+    name: Make Leo's branch
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+      - name: Make leo-weekend-specials from main
+        run: |
+          if git ls-remote --exit-code --heads origin leo-weekend-specials > /dev/null; then
+            echo "Leo's branch is already here. Nothing to do."
+            exit 0
+          fi
+          git switch -c leo-weekend-specials
+          node .github/team/leo.mjs
+          git -c user.name="Leo Chen" -c user.email="leo.chen@happyplates.invalid" commit -am "Add the weekend specials and Maya's menu changes"
+          git push origin leo-weekend-specials
+          echo "Done. Leo's branch is ready: leo-weekend-specials"
